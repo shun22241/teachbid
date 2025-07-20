@@ -255,10 +255,7 @@ export default function TeacherRequestDetailPage() {
                           </div>
                           <div>
                             <p className="font-medium">
-                              {proposal.teacher_id === (await supabase.auth.getUser()).data.user?.id 
-                                ? 'あなた' 
-                                : proposal.teacher.full_name
-                              }
+                              {proposal.teacher.full_name}
                             </p>
                             <p className="text-sm text-muted-foreground">
                               {formatRelativeTime(proposal.created_at)}
