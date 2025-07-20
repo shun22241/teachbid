@@ -49,6 +49,7 @@ export default function TeacherRequestDetailPage() {
   const [request, setRequest] = useState<Request | null>(null)
   const [proposals, setProposals] = useState<Proposal[]>([])
   const [userProposal, setUserProposal] = useState<Proposal | null>(null)
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -56,6 +57,8 @@ export default function TeacherRequestDetailPage() {
       try {
         const { data: { user } } = await supabase.auth.getUser()
         if (!user) return
+        
+        setCurrentUserId(user.id)
 
         const { data: requestData, error: requestError } = await supabase
           .from('requests')
@@ -266,7 +269,7 @@ export default function TeacherRequestDetailPage() {
                           {formatCurrency(Number(proposal.proposed_fee))}
                         </Badge>
                       </div>
-                      {proposal.teacher_id === (await supabase.auth.getUser()).data.user?.id ? (
+                      {proposal.teacher_id === currentUserId ? (
                         <p className="text-sm bg-muted p-3 rounded">
                           {proposal.message}
                         </p>

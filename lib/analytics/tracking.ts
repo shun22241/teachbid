@@ -1,4 +1,5 @@
 // Analytics and tracking utilities for TeachBid
+import React from 'react'
 
 export interface AnalyticsEvent {
   event: string
@@ -250,6 +251,6 @@ export function withPageTracking<T extends object>(
       analytics.trackPageView(pageName)
     }, [])
 
-    return <Component {...props} />
+    return React.createElement(Component, props)
   }
 }
