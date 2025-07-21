@@ -323,26 +323,44 @@ export function LoginForm() {
       </Card>
 
       {/* Demo Accounts */}
-      <Card className="bg-gray-50">
-        <CardContent className="pt-6">
-          <div className="text-center space-y-3">
-            <h3 className="text-sm font-medium text-gray-700">デモアカウント</h3>
-            <div className="grid grid-cols-1 gap-2 text-xs">
-              <div className="p-2 bg-white rounded border">
-                <div className="font-medium">生徒用</div>
-                <div className="text-gray-600">student1@test.com / password123</div>
-              </div>
-              <div className="p-2 bg-white rounded border">
-                <div className="font-medium">講師用</div>
-                <div className="text-gray-600">teacher1@test.com / password123</div>
-              </div>
+      <div className="relative z-10 mt-8 p-4 bg-gray-50 rounded-lg">
+        <div className="text-center space-y-3">
+          <p className="text-sm text-gray-600 font-medium">デモアカウント</p>
+          <div className="grid grid-cols-1 gap-2 text-xs">
+            <div className="p-3 bg-white rounded-md border border-gray-200 shadow-sm">
+              <div className="font-medium text-gray-700">生徒用</div>
+              <div className="text-gray-600 mt-1">student1@test.com / password123</div>
             </div>
-            <p className="text-xs text-gray-500">
-              ※ デモ用アカウントでサービスをお試しいただけます
-            </p>
+            <div className="p-3 bg-white rounded-md border border-gray-200 shadow-sm">
+              <div className="font-medium text-gray-700">講師用</div>
+              <div className="text-gray-600 mt-1">teacher1@test.com / password123</div>
+            </div>
           </div>
-        </CardContent>
-      </Card>
+          <p className="text-xs text-gray-500">
+            ※ デモ用アカウントでサービスをお試しいただけます
+          </p>
+        </div>
+      </div>
+
+      {/* Footer Section */}
+      <div className="relative z-0 mt-8 pt-8 border-t border-gray-200">
+        <p className="text-center text-sm text-gray-500">
+          © 2024 TeachBid All rights reserved.
+        </p>
+        <div className="mt-4 flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-4">
+          <Link href="/terms" className="text-sm text-gray-500 hover:text-gray-700 transition-colors">
+            利用規約
+          </Link>
+          <span className="hidden sm:inline text-gray-300">|</span>
+          <Link href="/privacy" className="text-sm text-gray-500 hover:text-gray-700 transition-colors">
+            プライバシーポリシー
+          </Link>
+          <span className="hidden sm:inline text-gray-300">|</span>
+          <Link href="/contact" className="text-sm text-gray-500 hover:text-gray-700 transition-colors">
+            お問い合わせ
+          </Link>
+        </div>
+      </div>
     </div>
   )
 }
