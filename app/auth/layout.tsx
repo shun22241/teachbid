@@ -8,9 +8,9 @@ export default function AuthLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col">
       {/* Header */}
-      <header className="absolute top-0 left-0 right-0 z-10">
+      <header className="z-10">
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center gap-2">
@@ -27,25 +27,27 @@ export default function AuthLayout({
       </header>
 
       {/* Main Content */}
-      <main className="pt-20 pb-8">
-        <div className="container mx-auto px-4">
+      <main className="flex-grow flex items-center justify-center px-4 py-8">
+        <div className="w-full max-w-md">
           {children}
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="absolute bottom-0 left-0 right-0">
-        <div className="container mx-auto px-4 py-4">
+      <footer className="mt-auto">
+        <div className="container mx-auto px-4 py-6">
           <div className="text-center text-sm text-gray-600">
             <p>&copy; 2024 TeachBid. All rights reserved.</p>
-            <div className="flex justify-center gap-4 mt-2">
-              <Link href="/terms" className="hover:underline">
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-4 mt-2">
+              <Link href="/terms" className="hover:text-gray-800 transition-colors">
                 利用規約
               </Link>
-              <Link href="/privacy" className="hover:underline">
+              <span className="hidden sm:inline text-gray-400">•</span>
+              <Link href="/privacy" className="hover:text-gray-800 transition-colors">
                 プライバシーポリシー
               </Link>
-              <Link href="/contact" className="hover:underline">
+              <span className="hidden sm:inline text-gray-400">•</span>
+              <Link href="/contact" className="hover:text-gray-800 transition-colors">
                 お問い合わせ
               </Link>
             </div>
