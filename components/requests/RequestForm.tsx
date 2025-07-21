@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
-import { requestSchema, type RequestFormData } from '@/lib/utils/validation-schemas'
+import { requestSchema, type RequestCreateData } from '@/lib/utils/validation-schemas'
 import { formatCurrency } from '@/lib/utils/fee-calculator'
 import { cn } from '@/lib/utils'
 import {
@@ -35,9 +35,9 @@ import {
 } from 'lucide-react'
 
 interface RequestFormProps {
-  onSubmit: (data: RequestFormData) => void
+  onSubmit: (data: RequestCreateData) => void
   loading?: boolean
-  defaultValues?: Partial<RequestFormData>
+  defaultValues?: Partial<RequestCreateData>
 }
 
 const categories = [
@@ -63,30 +63,24 @@ const experienceLevels = [
 ]
 
 export function RequestForm({ onSubmit, loading = false, defaultValues }: RequestFormProps) {
-  const form = useForm<RequestFormData>({
+  const form = useForm<RequestCreateData>({
     resolver: zodResolver(requestSchema),
     defaultValues: {
       title: '',
       description: '',
       category: '',
-      format: 'online',
-      location: '',
+      learningGoals: [''],
       budgetMin: 2000,
       budgetMax: 5000,
-      durationHours: 1,
-      preferredSchedule: '',
-      experienceLevel: 'beginner',
-      specificRequirements: '',
-      materialsNeeded: '',
+      isUrgent: false,
       ...defaultValues
     }
   })
 
-  const watchFormat = form.watch('format')
   const watchBudgetMin = form.watch('budgetMin')
   const watchBudgetMax = form.watch('budgetMax')
 
-  function handleSubmit(data: RequestFormData) {
+  function handleSubmit(data: RequestCreateData) {
     onSubmit(data)
   }
 
@@ -170,7 +164,7 @@ export function RequestForm({ onSubmit, loading = false, defaultValues }: Reques
 
             <FormField
               control={form.control}
-              name="experienceLevel"
+              name="currentLevel"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>経験レベル *</FormLabel>
@@ -211,6 +205,7 @@ export function RequestForm({ onSubmit, loading = false, defaultValues }: Reques
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
+{/*
             <FormField
               control={form.control}
               name="format"
@@ -249,8 +244,10 @@ export function RequestForm({ onSubmit, loading = false, defaultValues }: Reques
                 </FormItem>
               )}
             />
+            */}
 
-            {(watchFormat === 'in_person' || watchFormat === 'both') && (
+{/*
+            {false && (
               <FormField
                 control={form.control}
                 name="location"
@@ -271,6 +268,7 @@ export function RequestForm({ onSubmit, loading = false, defaultValues }: Reques
                 )}
               />
             )}
+            */}
           </CardContent>
         </Card>
 
@@ -335,7 +333,7 @@ export function RequestForm({ onSubmit, loading = false, defaultValues }: Reques
 
             <FormField
               control={form.control}
-              name="durationHours"
+              name="lessonDurationMinutes"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>希望時間 *</FormLabel>
@@ -364,6 +362,7 @@ export function RequestForm({ onSubmit, loading = false, defaultValues }: Reques
               )}
             />
 
+{/*
             <FormField
               control={form.control}
               name="preferredSchedule"
@@ -384,6 +383,7 @@ export function RequestForm({ onSubmit, loading = false, defaultValues }: Reques
                 </FormItem>
               )}
             />
+            */}
           </CardContent>
         </Card>
 
@@ -396,6 +396,7 @@ export function RequestForm({ onSubmit, loading = false, defaultValues }: Reques
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
+{/*
             <FormField
               control={form.control}
               name="specificRequirements"
@@ -437,6 +438,7 @@ export function RequestForm({ onSubmit, loading = false, defaultValues }: Reques
                 </FormItem>
               )}
             />
+            */}
           </CardContent>
         </Card>
 

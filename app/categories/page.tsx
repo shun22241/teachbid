@@ -79,8 +79,8 @@ export default function CategoriesPage() {
           <div className="container mx-auto px-4">
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {CATEGORIES.map((category) => (
-                <Card key={category.slug} className="hover:shadow-lg transition-all duration-300 hover:scale-105" asChild>
-                  <Link href={`/categories/${category.slug}`}>
+                <Link key={category.slug} href={`/categories/${category.slug}`}>
+                  <Card className="hover:shadow-lg transition-all duration-300 hover:scale-105">
                     <CardHeader>
                       <div className="flex items-center gap-4">
                         <div 
@@ -133,8 +133,8 @@ export default function CategoriesPage() {
                         </div>
                       </div>
                     </CardContent>
-                  </Link>
-                </Card>
+                  </Card>
+                </Link>
               ))}
             </div>
           </div>

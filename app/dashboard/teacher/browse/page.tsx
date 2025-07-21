@@ -1,5 +1,8 @@
 'use client'
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { RequestList } from '@/components/requests/RequestList'
@@ -72,7 +75,7 @@ export default function TeacherBrowsePage() {
     // Filter by format
     if (formatFilter !== 'all') {
       filtered = filtered.filter(request => 
-        request.format === formatFilter || request.format === 'both'
+        (request as any).format === formatFilter || (request as any).format === 'both'
       )
     }
 
@@ -206,17 +209,17 @@ export default function TeacherBrowsePage() {
                           </div>
                           <div className="flex items-center gap-1">
                             <MapPin className="h-4 w-4" />
-                            {request.format === 'online' ? 'オンライン' : 
-                             request.format === 'in_person' ? '対面' : 'どちらでも'}
+                            {(request as any).format === 'online' ? 'オンライン' : 
+                             (request as any).format === 'in_person' ? '対面' : 'どちらでも'}
                           </div>
                           <div className="flex items-center gap-1">
                             <Clock className="h-4 w-4" />
-                            {request.duration_hours}時間
+                            {(request as any).duration_hours}時間
                           </div>
                           <div className="flex items-center gap-1">
                             <Users className="h-4 w-4" />
-                            {request.experience_level === 'beginner' ? '初心者' :
-                             request.experience_level === 'intermediate' ? '中級者' : '上級者'}
+                            {(request as any).experience_level === 'beginner' ? '初心者' :
+                             (request as any).experience_level === 'intermediate' ? '中級者' : '上級者'}
                           </div>
                         </div>
 

@@ -202,10 +202,10 @@ export function useMessages() {
 
   // Set up real-time subscriptions
   useEffect(() => {
-    const { data: { user } } = supabase.auth.getUser()
-    
-    user.then((userData) => {
-      if (!userData.user) return
+    async function setupSubscriptions() {
+      const { data: { user } } = await supabase.auth.getUser()
+      
+      if (!user) return
 
       // Subscribe to new messages
       const messagesChannel = supabase
@@ -251,7 +251,9 @@ export function useMessages() {
         supabase.removeChannel(messagesChannel)
         supabase.removeChannel(conversationsChannel)
       }
-    })
+    }
+    
+    setupSubscriptions()
   }, [supabase, currentConversation, fetchMessages, fetchConversations])
 
   return {

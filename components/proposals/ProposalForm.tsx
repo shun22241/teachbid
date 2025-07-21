@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { proposalSchema, type ProposalFormData } from '@/lib/utils/validation-schemas'
+import { proposalSchema, type ProposalCreateData } from '@/lib/utils/validation-schemas'
 import { formatCurrency, calculateTeacherFee } from '@/lib/utils/fee-calculator'
 import {
   Form,
@@ -31,12 +31,12 @@ import {
 } from 'lucide-react'
 
 interface ProposalFormProps {
-  onSubmit: (data: ProposalFormData) => void
+  onSubmit: (data: ProposalCreateData) => void
   loading?: boolean
   budgetMin: number
   budgetMax: number
   durationHours: number
-  defaultValues?: Partial<ProposalFormData>
+  defaultValues?: Partial<ProposalCreateData>
 }
 
 export function ProposalForm({
@@ -47,22 +47,21 @@ export function ProposalForm({
   durationHours,
   defaultValues
 }: ProposalFormProps) {
-  const form = useForm<ProposalFormData>({
+  const form = useForm<ProposalCreateData>({
     resolver: zodResolver(proposalSchema),
     defaultValues: {
-      proposedFee: budgetMin,
+      amount: budgetMin,
       message: '',
       lessonPlan: '',
-      estimatedDuration: durationHours,
-      availability: '',
+      requestId: '',
       ...defaultValues
     }
   })
 
-  const watchProposedFee = form.watch('proposedFee')
+  const watchProposedFee = form.watch('amount')
   const teacherFee = calculateTeacherFee(watchProposedFee || 0)
 
-  function handleSubmit(data: ProposalFormData) {
+  function handleSubmit(data: ProposalCreateData) {
     onSubmit(data)
   }
 
@@ -92,7 +91,7 @@ export function ProposalForm({
 
             <FormField
               control={form.control}
-              name="proposedFee"
+              name="amount"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>提案料金 *</FormLabel>
@@ -138,6 +137,7 @@ export function ProposalForm({
               </Alert>
             )}
 
+{/* 
             <FormField
               control={form.control}
               name="estimatedDuration"
@@ -168,6 +168,7 @@ export function ProposalForm({
                 </FormItem>
               )}
             />
+            */}
           </CardContent>
         </Card>
 
@@ -244,6 +245,7 @@ export function ProposalForm({
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
+{/*
             <FormField
               control={form.control}
               name="availability"
@@ -264,6 +266,7 @@ export function ProposalForm({
                 </FormItem>
               )}
             />
+            */}
           </CardContent>
         </Card>
 

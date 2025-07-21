@@ -1,5 +1,8 @@
 'use client'
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { StatsCard } from '@/components/dashboard/StatsCard'
@@ -226,7 +229,7 @@ export default function TeacherDashboardPage() {
                         <div className="flex items-center gap-4 text-xs text-muted-foreground">
                           <span>{request.category}</span>
                           <span>¥{Number(request.budget_min).toLocaleString()} - ¥{Number(request.budget_max).toLocaleString()}</span>
-                          <span>{request.duration_hours}時間</span>
+                          <span>{(request as any).duration_hours}時間</span>
                         </div>
                       </div>
                       <Button

@@ -226,3 +226,31 @@ export function calculateEarningsEstimate(
     }
   })
 }
+
+/**
+ * Format currency amount for display
+ */
+export function formatCurrency(amount: number): string {
+  return new Intl.NumberFormat('ja-JP', {
+    style: 'currency',
+    currency: 'JPY',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(amount)
+}
+
+/**
+ * Calculate the total amount a student pays (including fees)
+ */
+export function calculateStudentFee(baseAmount: number, teacherStats?: TeacherStats): number {
+  const calculation = calculateFeeBreakdown(baseAmount, teacherStats)
+  return calculation.amount
+}
+
+/**
+ * Calculate the net amount a teacher receives (after fees)
+ */
+export function calculateTeacherFee(amount: number, teacherStats?: TeacherStats): number {
+  const calculation = calculateFeeBreakdown(amount, teacherStats)
+  return calculation.netAmount
+}

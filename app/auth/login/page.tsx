@@ -1,6 +1,9 @@
 import { Metadata } from 'next'
 import { LoginForm } from '@/components/auth/LoginForm'
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: 'ログイン | TeachBid',
   description: 'TeachBidにログインして、学習または指導を始めましょう。',
@@ -8,8 +11,10 @@ export const metadata: Metadata = {
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <LoginForm />
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
+      <div className="w-full">
+        <LoginForm />
+      </div>
     </div>
   )
 }

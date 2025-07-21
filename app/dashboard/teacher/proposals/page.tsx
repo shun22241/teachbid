@@ -1,5 +1,8 @@
 'use client'
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -328,7 +331,7 @@ function ProposalsList({
                     <div>
                       <span className="text-muted-foreground">提案金額:</span>
                       <span className="ml-1 font-medium">
-                        {formatCurrency(Number(proposal.proposed_fee))}
+                        {formatCurrency(Number(proposal.amount))}
                       </span>
                     </div>
                     <div>

@@ -83,7 +83,7 @@ export function DataTable<T extends Record<string, any>>({
                 className="hover:bg-muted/50 transition-colors"
               >
                 {columns.map((column) => {
-                  const value = column.key.includes('.') 
+                  const value = (typeof column.key === 'string' && column.key.includes('.')) 
                     ? getNestedValue(item, column.key as string)
                     : item[column.key]
                   

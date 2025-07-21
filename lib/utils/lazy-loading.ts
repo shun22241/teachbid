@@ -9,9 +9,9 @@ export const LazyProposalForm = lazy(() =>
   import('@/components/proposals/ProposalForm').then(module => ({ default: module.ProposalForm }))
 )
 
-export const LazyPaymentForm = lazy(() => 
-  import('@/components/payment/PaymentForm').then(module => ({ default: module.PaymentForm }))
-)
+// export const LazyPaymentForm = lazy(() => 
+//   import('@/components/payment/PaymentForm').then(module => ({ default: module.PaymentForm }))
+// )
 
 export const LazyMessageList = lazy(() => 
   import('@/components/messages/MessageList').then(module => ({ default: module.MessageList }))

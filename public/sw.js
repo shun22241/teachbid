@@ -67,6 +67,14 @@ self.addEventListener('fetch', event => {
   const { request } = event
   const url = new URL(request.url)
   
+  // Skip OAuth and authentication URLs
+  if (event.request.url.includes('supabase.co/auth') || 
+      event.request.url.includes('accounts.google.com') ||
+      event.request.url.includes('oauth') ||
+      event.request.url.includes('/auth/callback')) {
+    return
+  }
+  
   // Skip non-GET requests
   if (request.method !== 'GET') {
     return

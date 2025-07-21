@@ -1,4 +1,5 @@
 // Business metrics and KPI tracking for TeachBid
+import React from 'react'
 
 export interface BusinessMetrics {
   // User metrics

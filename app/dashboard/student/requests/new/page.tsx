@@ -1,5 +1,8 @@
 'use client'
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
@@ -8,7 +11,7 @@ import { Button } from '@/components/ui/button'
 import { ArrowLeft } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import { generateSlug } from '@/lib/utils/slug-generator'
-import type { RequestFormData } from '@/lib/utils/validation-schemas'
+import type { RequestCreateData } from '@/lib/utils/validation-schemas'
 
 export default function NewRequestPage() {
   const router = useRouter()
@@ -16,7 +19,7 @@ export default function NewRequestPage() {
   const { toast } = useToast()
   const [loading, setLoading] = useState(false)
 
-  async function handleSubmit(data: RequestFormData) {
+  async function handleSubmit(data: RequestCreateData) {
     setLoading(true)
     
     try {
@@ -43,15 +46,15 @@ export default function NewRequestPage() {
         slug,
         description: data.description,
         category: data.category,
-        format: data.format,
-        location: data.location || null,
+        format: (data as any).format || 'online',
+        location: (data as any).location || null,
         budget_min: data.budgetMin,
         budget_max: data.budgetMax,
-        duration_hours: data.durationHours,
+        duration_hours: (data as any).durationHours || 1,
         preferred_schedule: data.preferredSchedule || null,
-        experience_level: data.experienceLevel,
-        specific_requirements: data.specificRequirements || null,
-        materials_needed: data.materialsNeeded || null,
+        experience_level: (data as any).experienceLevel || 'beginner',
+        specific_requirements: (data as any).specificRequirements || null,
+        materials_needed: (data as any).materialsNeeded || null,
         status: 'open' as const,
         expires_at: expiresAt.toISOString()
       }

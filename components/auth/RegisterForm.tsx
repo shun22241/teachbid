@@ -73,7 +73,7 @@ export function RegisterForm() {
       toast({
         title: '成功',
         description: SUCCESS_MESSAGES.ACCOUNT_CREATED,
-        variant: 'success'
+        variant: 'default'
       })
 
       // Redirect to appropriate dashboard based on role

@@ -105,7 +105,7 @@ export function LoginForm() {
 
     } catch (error) {
       console.error('Login error:', error)
-      setError(MESSAGES.GENERIC_ERROR)
+      setError(MESSAGES.ERROR.UNKNOWN_ERROR)
       
       // Track unexpected errors
       trackBusinessEvent('login_error', {
@@ -118,8 +118,8 @@ export function LoginForm() {
 
   return (
     <div className="w-full max-w-md mx-auto space-y-6">
-      <Card>
-        <CardHeader className="text-center">
+      <Card className="shadow-lg border-0">
+        <CardHeader className="text-center pb-4">
           <div className="w-12 h-12 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
             <LogIn className="w-6 h-6 text-blue-600" />
           </div>
@@ -128,7 +128,7 @@ export function LoginForm() {
             アカウントにサインインしてください
           </p>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-0">
           {error && (
             <Alert variant="destructive" className="mb-4">
               <AlertCircle className="h-4 w-4" />
@@ -136,7 +136,7 @@ export function LoginForm() {
             </Alert>
           )}
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="email">メールアドレス</Label>
               <Input
@@ -239,17 +239,49 @@ export function LoginForm() {
                 disabled={isLoading}
                 onClick={async () => {
                   try {
-                    const { error } = await supabase.auth.signInWithOAuth({
+                    console.log('Google login started')
+                    setError('')
+                    setIsLoading(true)
+                    
+                    const { data, error } = await supabase.auth.signInWithOAuth({
                       provider: 'google',
                       options: {
-                        redirectTo: `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(redirectTo)}`
+                        redirectTo: 'https://teachbid.vercel.app/auth/callback',
+                        skipBrowserRedirect: false,
+                        queryParams: {
+                          access_type: 'offline',
+                          prompt: 'consent',
+                        }
                       }
                     })
+                    
+                    console.log('Google login response:', { data, error, hasUrl: !!data?.url })
+                    
                     if (error) {
-                      setError('Googleログインに失敗しました')
+                      console.error('Google OAuth error:', error)
+                      setError(`Googleログインエラー: ${error.message}`)
+                      setIsLoading(false)
+                    } else if (data?.url) {
+                      console.log('Redirecting to:', data.url)
+                      // 重要: 実際にリダイレクトを実行
+                      window.location.replace(data.url)
+                      
+                      // リダイレクトが失敗した場合のフォールバック
+                      setTimeout(() => {
+                        if (window.location.href.includes('/auth/login')) {
+                          console.log('Redirect failed, trying again...')
+                          window.location.href = data.url
+                        }
+                      }, 1000)
+                    } else {
+                      console.error('No URL in response data')
+                      setError('認証URLが取得できませんでした')
+                      setIsLoading(false)
                     }
-                  } catch (err) {
-                    setError('Googleログインに失敗しました')
+                  } catch (err: any) {
+                    console.error('Google login error:', err)
+                    setError(`Googleログインに失敗しました: ${err.message || 'Unknown error'}`)
+                    setIsLoading(false)
                   }
                 }}
               >

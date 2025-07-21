@@ -1,5 +1,8 @@
 'use client'
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
@@ -189,8 +192,8 @@ export default function TeacherRequestDetailPage() {
                   <p className="font-medium">{request.student.full_name}</p>
                   <p className="text-sm text-muted-foreground">
                     経験レベル: {
-                      request.experience_level === 'beginner' ? '初心者' :
-                      request.experience_level === 'intermediate' ? '中級者' : '上級者'
+                      (request as any).experience_level === 'beginner' ? '初心者' :
+                      (request as any).experience_level === 'intermediate' ? '中級者' : '上級者'
                     }
                   </p>
                 </div>
@@ -209,7 +212,7 @@ export default function TeacherRequestDetailPage() {
           </Card>
 
           {/* Requirements */}
-          {(request.specific_requirements || request.materials_needed) && (
+          {((request as any).specific_requirements || (request as any).materials_needed) && (
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -218,19 +221,19 @@ export default function TeacherRequestDetailPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                {request.specific_requirements && (
+                {(request as any).specific_requirements && (
                   <div>
                     <h4 className="font-medium mb-2">特別な要望</h4>
                     <p className="text-sm text-muted-foreground whitespace-pre-wrap">
-                      {request.specific_requirements}
+                      {(request as any).specific_requirements}
                     </p>
                   </div>
                 )}
-                {request.materials_needed && (
+                {(request as any).materials_needed && (
                   <div>
                     <h4 className="font-medium mb-2">必要な教材・機材</h4>
                     <p className="text-sm text-muted-foreground whitespace-pre-wrap">
-                      {request.materials_needed}
+                      {(request as any).materials_needed}
                     </p>
                   </div>
                 )}
@@ -266,7 +269,7 @@ export default function TeacherRequestDetailPage() {
                           </div>
                         </div>
                         <Badge variant="outline">
-                          {formatCurrency(Number(proposal.proposed_fee))}
+                          {formatCurrency(Number(proposal.amount))}
                         </Badge>
                       </div>
                       {proposal.teacher_id === currentUserId ? (
@@ -308,24 +311,24 @@ export default function TeacherRequestDetailPage() {
                 <MapPin className="h-4 w-4 text-muted-foreground" />
                 <span className="text-muted-foreground">形式:</span>
                 <span className="font-medium">
-                  {request.format === 'online' && 'オンライン'}
-                  {request.format === 'in_person' && '対面'}
-                  {request.format === 'both' && 'どちらでも'}
+                  {(request as any).format === 'online' && 'オンライン'}
+                  {(request as any).format === 'in_person' && '対面'}
+                  {(request as any).format === 'both' && 'どちらでも'}
                 </span>
               </div>
 
-              {request.location && (
+              {(request as any).location && (
                 <div className="flex items-center gap-2 text-sm">
                   <MapPin className="h-4 w-4 text-muted-foreground" />
                   <span className="text-muted-foreground">場所:</span>
-                  <span className="font-medium">{request.location}</span>
+                  <span className="font-medium">{(request as any).location}</span>
                 </div>
               )}
 
               <div className="flex items-center gap-2 text-sm">
                 <Clock className="h-4 w-4 text-muted-foreground" />
                 <span className="text-muted-foreground">時間:</span>
-                <span className="font-medium">{request.duration_hours}時間</span>
+                <span className="font-medium">{(request as any).duration_hours}時間</span>
               </div>
 
               <div className="flex items-center gap-2 text-sm">
@@ -340,21 +343,21 @@ export default function TeacherRequestDetailPage() {
                 <Calendar className="h-4 w-4 text-muted-foreground" />
                 <span className="text-muted-foreground">期限:</span>
                 <span className="font-medium">
-                  {new Date(request.expires_at).toLocaleDateString('ja-JP')}
+                  {new Date((request as any).expires_at).toLocaleDateString('ja-JP')}
                 </span>
               </div>
             </CardContent>
           </Card>
 
           {/* Schedule */}
-          {request.preferred_schedule && (
+          {(request as any).preferred_schedule && (
             <Card>
               <CardHeader>
                 <CardTitle>希望スケジュール</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm whitespace-pre-wrap">
-                  {request.preferred_schedule}
+                  {(request as any).preferred_schedule}
                 </p>
               </CardContent>
             </Card>

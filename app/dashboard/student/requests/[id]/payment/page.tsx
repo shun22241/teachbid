@@ -275,7 +275,7 @@ export default function PaymentPage() {
               <div>
                 <h4 className="font-medium mb-2">提案金額</h4>
                 <p className="text-2xl font-bold text-primary">
-                  ¥{Number(proposal.proposed_fee).toLocaleString()}
+                  ¥{Number(proposal.amount).toLocaleString()}
                 </p>
               </div>
               

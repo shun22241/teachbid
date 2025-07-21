@@ -142,10 +142,10 @@ export function useNotifications() {
 
   // Set up real-time subscription
   useEffect(() => {
-    const { data: { user } } = supabase.auth.getUser()
-    
-    user.then((userData) => {
-      if (!userData.user) return
+    async function setupSubscription() {
+      const { data: { user } } = await supabase.auth.getUser()
+      
+      if (!user) return
 
       const channel = supabase
         .channel('notifications')
@@ -155,7 +155,7 @@ export function useNotifications() {
             event: 'INSERT',
             schema: 'public',
             table: 'notifications',
-            filter: `user_id=eq.${userData.user.id}`
+            filter: `user_id=eq.${user.id}`
           },
           (payload) => {
             const newNotification = payload.new as Notification
@@ -180,7 +180,9 @@ export function useNotifications() {
       return () => {
         supabase.removeChannel(channel)
       }
-    })
+    }
+    
+    setupSubscription()
   }, [supabase, toast])
 
   // Get notification icon based on type

@@ -177,7 +177,7 @@ export default function ProposalDetailPage() {
   }
 
   const StatusIcon = statusIcons[proposal.status as keyof typeof statusIcons]
-  const teacherFee = calculateTeacherFee(Number(proposal.proposed_fee))
+  const teacherFee = calculateTeacherFee(Number(proposal.amount))
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -311,11 +311,11 @@ export default function ProposalDetailPage() {
                 </p>
               </div>
 
-              {proposal.availability && (
+              {(proposal as any).availability && (
                 <div>
                   <h4 className="font-medium mb-2">対応可能時間</h4>
                   <p className="text-sm whitespace-pre-wrap bg-muted/50 p-3 rounded-lg">
-                    {proposal.availability}
+                    {(proposal as any).availability}
                   </p>
                 </div>
               )}
@@ -335,7 +335,7 @@ export default function ProposalDetailPage() {
                 <DollarSign className="h-4 w-4 text-muted-foreground" />
                 <span className="text-muted-foreground">提案金額:</span>
                 <span className="font-medium">
-                  {formatCurrency(Number(proposal.proposed_fee))}
+                  {formatCurrency(Number(proposal.amount))}
                 </span>
               </div>
 
@@ -351,7 +351,7 @@ export default function ProposalDetailPage() {
                 <Clock className="h-4 w-4 text-muted-foreground" />
                 <span className="text-muted-foreground">指導時間:</span>
                 <span className="font-medium">
-                  {proposal.estimated_duration}時間
+                  {(proposal as any).estimated_duration}時間
                 </span>
               </div>
 

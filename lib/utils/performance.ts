@@ -84,7 +84,7 @@ export function observeWebVitals() {
   new PerformanceObserver((list) => {
     for (const entry of list.getEntries()) {
       if (process.env.NODE_ENV === 'development') {
-        console.log('FID:', entry.processingStart - entry.startTime)
+        console.log('FID:', (entry as any).processingStart - entry.startTime)
       }
     }
   }).observe({ entryTypes: ['first-input'] })

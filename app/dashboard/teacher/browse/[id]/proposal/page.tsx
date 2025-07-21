@@ -1,5 +1,8 @@
 'use client'
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
@@ -11,7 +14,7 @@ import { formatCurrency } from '@/lib/utils/fee-calculator'
 import { useToast } from '@/hooks/use-toast'
 import { ArrowLeft, Clock, DollarSign, MapPin, User } from 'lucide-react'
 import type { Database } from '@/types/database'
-import type { ProposalFormData } from '@/lib/utils/validation-schemas'
+import type { ProposalCreateData } from '@/lib/utils/validation-schemas'
 
 type Request = Database['public']['Tables']['requests']['Row'] & {
   student: {
@@ -104,7 +107,7 @@ export default function ProposalPage() {
     }
   }, [params.id, supabase, toast, router])
 
-  async function handleSubmit(data: ProposalFormData) {
+  async function handleSubmit(data: ProposalCreateData) {
     if (!request) return
 
     setSubmitting(true)
@@ -123,11 +126,11 @@ export default function ProposalPage() {
       const proposalData = {
         request_id: request.id,
         teacher_id: user.id,
-        proposed_fee: data.proposedFee,
+        amount: data.amount,
         message: data.message,
         lesson_plan: data.lessonPlan,
-        estimated_duration: data.estimatedDuration,
-        availability: data.availability || null,
+        estimated_duration: (data as any).estimatedDuration || null,
+        availability: (data as any).availability || null,
         status: 'pending' as const
       }
 
@@ -229,8 +232,8 @@ export default function ProposalPage() {
                 <div>
                   <p className="font-medium">{request.student.full_name}</p>
                   <p className="text-sm text-muted-foreground">
-                    {request.experience_level === 'beginner' ? '初心者' :
-                     request.experience_level === 'intermediate' ? '中級者' : '上級者'}
+                    {(request as any).experience_level === 'beginner' ? '初心者' :
+                     (request as any).experience_level === 'intermediate' ? '中級者' : '上級者'}
                   </p>
                 </div>
               </div>
@@ -252,14 +255,14 @@ export default function ProposalPage() {
                 <div className="flex items-center gap-2 text-sm">
                   <MapPin className="h-4 w-4 text-muted-foreground" />
                   <span>
-                    {request.format === 'online' ? 'オンライン' :
-                     request.format === 'in_person' ? '対面' : 'どちらでも'}
+                    {(request as any).format === 'online' ? 'オンライン' :
+                     (request as any).format === 'in_person' ? '対面' : 'どちらでも'}
                   </span>
                 </div>
 
                 <div className="flex items-center gap-2 text-sm">
                   <Clock className="h-4 w-4 text-muted-foreground" />
-                  <span>{request.duration_hours}時間</span>
+                  <span>{(request as any).duration_hours}時間</span>
                 </div>
 
                 <div className="flex items-center gap-2 text-sm">
@@ -275,17 +278,17 @@ export default function ProposalPage() {
                 <div>
                   <h4 className="font-medium mb-2">希望スケジュール</h4>
                   <p className="text-sm text-muted-foreground">
-                    {request.preferred_schedule}
+                    {JSON.stringify((request as any).preferred_schedule)}
                   </p>
                 </div>
               )}
 
               {/* Requirements */}
-              {request.specific_requirements && (
+              {(request as any).specific_requirements && (
                 <div>
                   <h4 className="font-medium mb-2">特別な要望</h4>
                   <p className="text-sm text-muted-foreground">
-                    {request.specific_requirements}
+                    {(request as any).specific_requirements}
                   </p>
                 </div>
               )}
@@ -300,7 +303,7 @@ export default function ProposalPage() {
             loading={submitting}
             budgetMin={Number(request.budget_min)}
             budgetMax={Number(request.budget_max)}
-            durationHours={request.duration_hours}
+            durationHours={(request as any).duration_hours}
           />
         </div>
       </div>

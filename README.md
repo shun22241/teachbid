@@ -48,6 +48,70 @@ TeachBidは、生徒が学習目標と予算を投稿し、講師が競争入札
 - **Stripe** - 決済処理（Payment Intents + Connect）
 
 ### 開発・運用
+- **Vercel** - ホスティング・CI/CD
+- **GitHub Actions** - 自動テスト・デプロイ
+- **ESLint + Prettier** - コード品質管理
+- **PWA** - プログレッシブウェブアプリ機能
+
+## 🚀 デプロイ手順
+
+### 必要な環境変数
+```env
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+
+# Authentication
+NEXTAUTH_SECRET=your_nextauth_secret
+NEXTAUTH_URL=https://your-domain.com
+
+# Google OAuth
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+
+# Database
+DATABASE_URL=your_database_url
+
+# Application
+NEXT_PUBLIC_APP_URL=https://your-domain.com
+```
+
+### Vercelへのデプロイ
+
+1. **プロジェクトのクローン**
+   ```bash
+   git clone https://github.com/your-repo/teachbid.git
+   cd teachbid
+   ```
+
+2. **依存関係のインストール**
+   ```bash
+   npm install
+   ```
+
+3. **Vercel CLIのインストール**
+   ```bash
+   npm i -g vercel
+   ```
+
+4. **環境変数の設定**
+   ```bash
+   vercel env add NEXT_PUBLIC_SUPABASE_URL
+   vercel env add NEXT_PUBLIC_SUPABASE_ANON_KEY
+   # ... 他の環境変数も同様に追加
+   ```
+
+5. **デプロイ実行**
+   ```bash
+   vercel --prod
+   ```
+
+6. **Deployment Protection無効化**
+   - Vercel Dashboard → Settings → General → Deployment Protection
+   - Standard Protectionを「Disabled」に設定
+
+### 開発・運用
 - **Jest + React Testing Library** - ユニットテスト
 - **Playwright** - E2Eテスト
 - **PWA対応** - オフライン機能とインストール

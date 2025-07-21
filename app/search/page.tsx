@@ -1,5 +1,8 @@
 'use client'
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useSearch } from '@/hooks/useSearch'
@@ -48,7 +51,13 @@ export default function SearchPage() {
   } = useSearch()
 
   const [searchType, setSearchType] = useState<'requests' | 'teachers'>('requests')
-  const [filterOptions, setFilterOptions] = useState({
+  const [filterOptions, setFilterOptions] = useState<{
+    categories: any[]
+    subjects: any[]
+    locations: any[]
+    formats: string[]
+    sortOptions: { value: string; label: string }[]
+  }>({
     categories: [],
     subjects: [],
     locations: [],

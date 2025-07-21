@@ -79,7 +79,7 @@ export function RequestList({ requests, showStatus = false, className }: Request
                   <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
                     <div className="flex items-center gap-1">
                       <MapPin className="h-4 w-4" />
-                      {request.format === 'online' ? 'オンライン' : '対面'}
+                      {(request as any).format === 'online' ? 'オンライン' : '対面'}
                     </div>
                     <div className="flex items-center gap-1">
                       <Calendar className="h-4 w-4" />
@@ -87,7 +87,7 @@ export function RequestList({ requests, showStatus = false, className }: Request
                     </div>
                     <div className="flex items-center gap-1">
                       <Clock className="h-4 w-4" />
-                      {request.duration_hours}時間
+                      {(request as any).duration_hours}時間
                     </div>
                   </div>
                 </div>

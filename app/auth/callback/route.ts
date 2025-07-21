@@ -4,9 +4,13 @@ import { NextRequest, NextResponse } from 'next/server'
 import type { Database } from '@/types/database'
 
 export async function GET(request: NextRequest) {
+  console.log('Auth callback started:', request.url)
   const requestUrl = new URL(request.url)
   const code = requestUrl.searchParams.get('code')
   const redirectTo = requestUrl.searchParams.get('redirect') || '/dashboard'
+
+  console.log('Code received:', !!code)
+  console.log('Redirect to:', redirectTo)
 
   if (code) {
     const cookieStore = cookies()
@@ -37,7 +41,10 @@ export async function GET(request: NextRequest) {
     )
     
     try {
+      console.log('Attempting to exchange code for session...')
       const { data, error } = await supabase.auth.exchangeCodeForSession(code)
+      
+      console.log('Exchange result:', { hasData: !!data, hasError: !!error })
       
       if (error) {
         console.error('Auth callback error:', error)
@@ -45,30 +52,14 @@ export async function GET(request: NextRequest) {
       }
 
       if (data.user) {
-        // Get user profile to determine correct dashboard
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', data.user.id)
-          .single()
-
-        let dashboardPath = '/dashboard'
-        if (profile) {
-          switch (profile.role) {
-            case 'student':
-              dashboardPath = '/dashboard/student/dashboard'
-              break
-            case 'teacher':
-              dashboardPath = '/dashboard/teacher/dashboard'
-              break
-            case 'admin':
-              dashboardPath = '/dashboard/admin/dashboard'
-              break
-          }
-        }
-
-        const finalRedirect = redirectTo === '/dashboard' ? dashboardPath : redirectTo
-        return NextResponse.redirect(new URL(finalRedirect, request.url))
+        console.log('Auth success for user:', data.user.id)
+        console.log('Redirecting to demo page...')
+        
+        // Temporary: Skip profile check and redirect to demo page
+        return NextResponse.redirect(new URL('/demo', request.url))
+      } else {
+        console.log('No user data received')
+        return NextResponse.redirect(new URL('/login?error=no_user', request.url))
       }
     } catch (error) {
       console.error('Unexpected auth callback error:', error)
@@ -77,5 +68,6 @@ export async function GET(request: NextRequest) {
   }
 
   // If no code or other issues, redirect to login
+  console.log('No code provided, redirecting to login')
   return NextResponse.redirect(new URL('/login?error=no_code', request.url))
 }

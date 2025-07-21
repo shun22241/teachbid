@@ -183,7 +183,7 @@ export const fileUploadSchema = z.object({
   maxSize: z.number().default(5 * 1024 * 1024), // 5MB
   allowedTypes: z.array(z.string()).default(['image/jpeg', 'image/png', 'image/webp', 'application/pdf']),
 }).refine(data => data.file.size <= data.maxSize, {
-  message: `ファイルサイズは${(data.maxSize / 1024 / 1024).toFixed(0)}MB以下である必要があります`,
+  message: 'ファイルサイズが大きすぎます',
 }).refine(data => data.allowedTypes.includes(data.file.type), {
   message: 'サポートされていないファイル形式です',
 })
@@ -211,6 +211,12 @@ export const adminNotificationSchema = z.object({
   message: 'ユーザーIDまたはユーザー役割のいずれかを指定してください',
   path: ['userId'],
 })
+
+// Backwards compatibility exports
+export const proposalFormSchema = proposalCreateSchema
+export const requestFormSchema = requestCreateSchema
+export const proposalSchema = proposalCreateSchema
+export const requestSchema = requestCreateSchema
 
 // Type exports for use in components
 export type RegisterFormData = z.infer<typeof registerSchema>

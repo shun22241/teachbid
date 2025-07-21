@@ -2,6 +2,9 @@
 const nextConfig = {
   output: 'standalone',
   
+  // Static page generation timeout
+  staticPageGenerationTimeout: 180,
+  
   images: {
     remotePatterns: [
       {
@@ -24,6 +27,11 @@ const nextConfig = {
   // Performance optimizations
   experimental: {
     optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
+    workerThreads: false,
+    cpus: 1,
+    outputFileTracingIncludes: {
+      '/**': ['./node_modules/@radix-ui/**/*']
+    }
   },
   
   // Compression

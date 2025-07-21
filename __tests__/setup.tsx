@@ -1,6 +1,7 @@
 // Test setup configuration for TeachBid
 
 import '@testing-library/jest-dom'
+import React from 'react'
 
 // Mock Next.js router
 jest.mock('next/navigation', () => ({
