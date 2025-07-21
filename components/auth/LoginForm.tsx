@@ -34,10 +34,21 @@ export function LoginForm() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors }
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema)
   })
+
+  const fillDemoAccount = (type: 'student' | 'teacher') => {
+    if (type === 'student') {
+      setValue('email', 'student1@test.com')
+      setValue('password', 'password123')
+    } else {
+      setValue('email', 'teacher1@test.com')
+      setValue('password', 'password123')
+    }
+  }
 
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true)
@@ -50,6 +61,15 @@ export function LoginForm() {
       })
 
       if (error) {
+        // Detailed error logging
+        console.error('Login error details:', {
+          message: error.message,
+          status: (error as any).status,
+          details: (error as any).details,
+          error: error,
+          email: data.email
+        })
+
         // Track failed login attempt
         trackBusinessEvent('login_failed', {
           email: data.email,
@@ -64,7 +84,7 @@ export function LoginForm() {
         } else if (error.message.includes('Too many requests')) {
           setError('ログイン試行回数が多すぎます。しばらく時間をおいてから再度お試しください。')
         } else {
-          setError('ログインに失敗しました。しばらく時間をおいてから再度お試しください。')
+          setError(`ログインに失敗しました: ${error.message}`)
         }
         return
       }
@@ -72,13 +92,21 @@ export function LoginForm() {
       if (authData.user) {
         // Get user profile to determine role
         const { data: profile, error: profileError } = await supabase
-          .from('user_profiles')
+          .from('profiles')
           .select('role, display_name')
           .eq('id', authData.user.id)
           .single()
 
-        if (profileError || !profile) {
-          setError('ユーザー情報の取得に失敗しました。')
+        if (profileError) {
+          console.error('Profile fetch error:', profileError)
+          console.log('User ID:', authData.user.id)
+          setError('ユーザー情報の取得に失敗しました。管理者にお問い合わせください。')
+          return
+        }
+
+        if (!profile) {
+          console.error('No profile found for user:', authData.user.id)
+          setError('ユーザープロフィールが見つかりません。管理者にお問い合わせください。')
           return
         }
 
@@ -328,12 +356,38 @@ export function LoginForm() {
           <p className="text-sm text-gray-600 font-medium">デモアカウント</p>
           <div className="grid grid-cols-1 gap-2 text-xs">
             <div className="p-3 bg-white rounded-md border border-gray-200 shadow-sm">
-              <div className="font-medium text-gray-700">生徒用</div>
-              <div className="text-gray-600 mt-1">student1@test.com / password123</div>
+              <div className="flex justify-between items-center">
+                <div>
+                  <div className="font-medium text-gray-700">生徒用</div>
+                  <div className="text-gray-600 mt-1">student1@test.com / password123</div>
+                </div>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={() => fillDemoAccount('student')}
+                  className="text-xs h-7"
+                >
+                  入力
+                </Button>
+              </div>
             </div>
             <div className="p-3 bg-white rounded-md border border-gray-200 shadow-sm">
-              <div className="font-medium text-gray-700">講師用</div>
-              <div className="text-gray-600 mt-1">teacher1@test.com / password123</div>
+              <div className="flex justify-between items-center">
+                <div>
+                  <div className="font-medium text-gray-700">講師用</div>
+                  <div className="text-gray-600 mt-1">teacher1@test.com / password123</div>
+                </div>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={() => fillDemoAccount('teacher')}
+                  className="text-xs h-7"
+                >
+                  入力
+                </Button>
+              </div>
             </div>
           </div>
           <p className="text-xs text-gray-500">

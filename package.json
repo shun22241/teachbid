@@ -13,7 +13,8 @@
     "deploy:docker": "docker build -t teachbid . && docker run -p 3000:3000 teachbid",
     "supabase:start": "supabase start",
     "supabase:stop": "supabase stop",
-    "supabase:reset": "supabase db reset"
+    "supabase:reset": "supabase db reset",
+    "create-demo-users": "node scripts/create-demo-users.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
