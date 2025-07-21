@@ -90,45 +90,39 @@ export function LoginForm() {
       }
 
       if (authData.user) {
-        // Get user profile to determine role
-        const { data: profile, error: profileError } = await supabase
-          .from('profiles')
-          .select('role, display_name')
-          .eq('id', authData.user.id)
-          .single()
+        console.log('Login successful for user:', authData.user.email)
+        
+        // Try to get user profile but don't fail if it doesn't exist
+        try {
+          const { data: profile, error: profileError } = await supabase
+            .from('profiles')
+            .select('role, display_name')
+            .eq('id', authData.user.id)
+            .single()
 
-        if (profileError) {
-          console.error('Profile fetch error:', profileError)
-          console.log('User ID:', authData.user.id)
-          setError('ユーザー情報の取得に失敗しました。管理者にお問い合わせください。')
-          return
+          if (profileError) {
+            console.log('Profile fetch error (will still proceed):', profileError.message)
+          } else {
+            console.log('Profile found:', profile)
+          }
+
+          // Track successful login
+          trackBusinessEvent('user_login', {
+            userId: authData.user.id,
+            role: profile?.role || 'unknown',
+            email: authData.user.email
+          })
+        } catch (error) {
+          console.log('Profile check failed, but continuing with login')
         }
-
-        if (!profile) {
-          console.error('No profile found for user:', authData.user.id)
-          setError('ユーザープロフィールが見つかりません。管理者にお問い合わせください。')
-          return
-        }
-
-        // Track successful login
-        trackBusinessEvent('user_login', {
-          userId: authData.user.id,
-          role: profile.role,
-          email: authData.user.email
-        })
 
         // Set remember me preference
         if (rememberMe) {
           localStorage.setItem('teachbid_remember_me', 'true')
         }
 
-        const dashboardPath = profile?.role === 'student' 
-          ? '/dashboard/student/dashboard'
-          : profile?.role === 'teacher'
-          ? '/dashboard/teacher/dashboard'
-          : '/dashboard/admin/dashboard'
-
-        router.push(redirectTo === '/dashboard' ? dashboardPath : redirectTo)
+        // Always redirect to success page regardless of profile status
+        router.push('/login-success')
       }
 
     } catch (error) {

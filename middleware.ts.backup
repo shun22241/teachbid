@@ -2,11 +2,39 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
+  console.log('Middleware triggered for:', request.nextUrl.pathname)
+  
   let response = NextResponse.next({
     request: {
       headers: request.headers,
     },
   })
+
+  // Public paths that don't require authentication
+  const publicPaths = [
+    '/',
+    '/how-it-works',
+    '/pricing',
+    '/teachers',
+    '/categories',
+    '/search',
+    '/auth/login',
+    '/auth/register',
+    '/auth/callback',
+    '/auth/forgot-password',
+    '/demo'
+  ]
+
+  const pathname = request.nextUrl.pathname
+  const isPublicPath = publicPaths.includes(pathname) || pathname.startsWith('/api/')
+  
+  console.log('Is public path:', isPublicPath, 'for', pathname)
+
+  // Skip authentication for public paths
+  if (isPublicPath) {
+    console.log('Allowing public access to:', pathname)
+    return response
+  }
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -86,9 +114,8 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     /*
-     * Match only protected routes to reduce middleware overhead
+     * Match all routes except static files and API routes
      */
-    '/dashboard/:path*',
-    '/admin/:path*',
+    '/((?!api|_next/static|_next/image|favicon.ico|manifest|robots|sitemap|sw).*)',
   ],
 }
